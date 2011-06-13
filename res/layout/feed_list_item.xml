@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="50dp">
+	<TextView android:id="@+feed_list/feed_count" android:layout_width="wrap_content" android:layout_height='match_parent'
+		android:textAppearance="@style/feedTextStyle.FeedName"	 android:gravity="center_vertical"
+		android:layout_marginRight="5dp" android:layout_alignParentRight="true"/>
+	<TextView android:id="@+feed_list/co_feed_name" android:layout_width="match_parent" android:layout_height="match_parent"
+		android:textAppearance="@style/feedTextStyle.FeedName" android:gravity="center_vertical" android:layout_toLeftOf="@feed_list/feed_count"
+		android:layout_marginLeft="5dp"/> 
+</RelativeLayout>

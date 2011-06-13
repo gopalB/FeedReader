@@ -1,0 +1,25 @@
+About Me:
+This is my first project on GitHub, still lots of things need to be done in this project. I will keep working on this project whenever I will get time.
+If you have any suggestion or advice for me feel free to ping me. Always open to learn.
+Also looking for a android or java project where I can contribute, if you have one then let me know.
+
+About Feed Reader:
+
+This is a basic version of Feed Reader. Which will retrieve feeds from some of your popular News Website like Engadget, Tech Crunch, Google and Yahoo News.
+
+Features:
+*** Star your Favorite Feed's ***
+You can star your favorite feeds, and can always look them back from Starred option on first screen.
+
+*** Publish Feed to Facebook ***
+After logging to Facebook, you can post feed directly from Feed Reader.
+
+
+To compile and run you will need to download Facebook Sdk for android, here is a link:
+
+https://github.com/facebook/facebook-android-sdk
+
+
+Android Market Link:
+https://market.android.com/details?id=com.feedReader
+

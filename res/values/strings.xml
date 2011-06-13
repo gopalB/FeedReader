@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="app_name">Feed Reader</string>
+    <string name="Yahoo_Feed_Title">Yahoo Feed!!!</string>
+    
+    <string name="feed_internet_error">No internet connection.</string>
+    <string name="feed_xml_error">Error while parsing Feed, Please report this issue. Thanks !!!</string>
+    <string name="read_more">Read More</string>
+    <string name="starred">Starred</string>
+    <string name="load_more">Load More</string>
+    
+    <string name="facebook_post">Post</string>
+    <string name="facebook_login">Login</string>
+</resources>

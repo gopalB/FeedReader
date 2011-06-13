@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- feed Style Start -->
+	<style name="feed_custom_title" parent="@android:style/TextAppearance">
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#FFF</item>
+	</style>
+	<style name="feedTextStyle" parent="@android:style/TextAppearance">
+		<item name="android:typeface">serif</item>
+	</style>
+	<style name="feedTextStyle.FeedName" parent="@android:style/TextAppearance">
+		<item name="android:textSize">20sp</item>
+		<item name="android:textColor">#000000</item>
+	</style>
+	<style name="feedTextStyle.Title">
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#000000</item>
+	</style>
+	<style name="feedTextStyle.PubDate">
+		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">#000000</item>
+	</style>
+	<style name="feedTextStyle.ReadMore">
+		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">#00ccff</item>
+	</style>
+	<style name="feedTextStyle.facebook">
+		<item name="android:textSize">16sp</item>
+		<item name="android:textColor">#ffffff</item>
+	</style>
+	<style name="feedTextStyle.LoadMore">
+		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">#0000A0</item>
+	</style>
+	<style name="Theme.FeedReader_Theme" parent="@android:Theme">
+		<item name="android:windowBackground">@android:color/white</item>
+	</style>
+	<!-- Feed Quick Action Anim -->
+	<style name="Animations" />
+
+	<!-- PopDownMenu -->
+	<style name="Animations.PopDownMenu" />
+
+	<style name="Animations.PopDownMenu.Center">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
+	</style>
+
+	<style name="Animations.PopDownMenu.Left">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
+	</style>
+
+	<style name="Animations.PopDownMenu.Right">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_topright_to_bottomleft</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomleft_to_topright</item>
+	</style>
+
+	<style name="Animations.PopDownMenu.Reflect">
+		<item name="@android:windowEnterAnimation">@anim/pump_top</item>
+		<item name="@android:windowExitAnimation">@anim/disappear</item>
+	</style>
+
+	<!-- PopUpMenu -->
+	<style name="Animations.PopUpMenu" />
+
+	<style name="Animations.PopUpMenu.Center">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
+	</style>
+
+	<style name="Animations.PopUpMenu.Left">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_bottomleft_to_topright</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_topright_to_bottomleft</item>
+	</style>
+
+	<style name="Animations.PopUpMenu.Right">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_bottomright_to_topleft</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_topleft_to_bottomright</item>
+	</style>
+
+	<style name="Animations.PopUpMenu.Reflect">
+		<item name="@android:windowEnterAnimation">@anim/pump_bottom</item>
+		<item name="@android:windowExitAnimation">@anim/disappear</item>
+	</style>
+</resources>

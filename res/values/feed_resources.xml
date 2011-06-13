@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	 <string-array name="feed_name">
+        <item>"Engadget"</item>
+        <item>"TechCrunch"</item>
+        <item>"Google News"</item>
+        <item>"Yahoo News"</item>
+        <item>"Times of India News"</item>
+    </string-array>
+      <string-array name="feed_url">
+        <item>"http://www.engadget.com/rss.xml"</item>
+        <item>"http://techcrunch.com/feed/"</item>
+        <item>"http://news.google.com/news?output=rss"</item>
+        <item>"http://rss.news.yahoo.com/rss/us"</item>
+        <item>"http://dynamic.feedsportal.com/pf/555218/http://toi.timesofindia.indiatimes.com/rssfeedstopstories.cms"</item>
+    </string-array>
+    <string-array name="encoding">
+    	<item>"UTF_8"</item>
+        <item>"UTF_8"</item>
+        <item>"UTF_8"</item>
+        <item>"UTF_8"</item>
+        <item>"UTF_8"</item>
+    </string-array>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+feed_detail_footer_more/load_more" android:layout_width="match_parent"
+	android:layout_height="30dp" android:gravity="center"
+	android:text="@string/load_more" android:background="@drawable/feed_list_selector"
+	android:textAppearance="@style/feedTextStyle.LoadMore"/>
+  
