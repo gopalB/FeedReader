@@ -20,7 +20,7 @@ import com.feedReader.R;
 import com.feedReader.social.facebook.FacebookProvider;
 import com.feedReader.util.Constants;
 /**
- * Popup window, shows action list as icon and text like the one in Gallery3D app. 
+ * Popup mPopWindow, shows action list as icon and text like the one in Gallery3D app. 
  * 
  */
 public class QuickAction extends CustomPopupWindow implements OnClickListener {
@@ -33,7 +33,7 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 	/**
 	 * Constructor
 	 * 
-	 * @param anchor {@link View} on where the popup window should be displayed
+	 * @param anchor {@link View} on where the popup mPopWindow should be displayed
 	 */
 	public QuickAction(Activity feedDetailActivity) {
 		super(feedDetailActivity);
@@ -68,7 +68,7 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 		}
 	}
 	/**
-	 * Show popup window. Popup is automatically positioned, on top or bottom of anchor view.
+	 * Show popup mPopWindow. Popup is automatically positioned, on top or bottom of anchor view.
 	 * 
 	 */
 	public void show(View anchor,Bundle messageBundle) {
@@ -84,7 +84,7 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 		
 		int xPos, yPos;
 		final View root = mRoot;
-		int[] location = new int[2];
+		final int[] location = new int[2];
 
 		anchor.getLocationOnScreen(location);
 		final Rect anchorRect = new Rect(location[0], location[1], location[0] + anchor.getWidth(), location[1] + anchor.getHeight());
@@ -93,8 +93,8 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 
 		final int rootHeight = root.getMeasuredHeight();
 		final int rootWidth = root.getMeasuredWidth();
-		final int screenWidth = windowManager.getDefaultDisplay().getWidth();
-		final int screenHeight = windowManager.getDefaultDisplay().getHeight();
+		final int screenWidth = mWindowManager.getDefaultDisplay().getWidth();
+		final int screenHeight = mWindowManager.getDefaultDisplay().getHeight();
 
 		//automatically get X coord of popup (top left)
 		if ((anchorRect.left + rootWidth) > screenWidth) {
@@ -107,10 +107,9 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 			}
 		}
 
-		int dyTop = anchorRect.top;
-		int dyBottom = screenHeight - anchorRect.bottom;
-
-		boolean onTop = (dyTop > dyBottom) ? true : false;
+		final int dyTop = anchorRect.top;
+		final int dyBottom = screenHeight - anchorRect.bottom;
+		final boolean onTop = (dyTop > dyBottom) ? true : false;
 
 		final HorizontalScrollView scroller = (HorizontalScrollView) root.findViewById(R.feed_qa.scroller);
 		if (onTop) {
@@ -131,7 +130,7 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 
 		showArrow(((onTop) ? R.feed_qa.arrow_down : R.feed_qa.arrow_up), anchorRect.centerX()-xPos);
 		setAnimationStyle(screenWidth, anchorRect.centerX(), onTop);
-		window.showAtLocation(anchor, Gravity.NO_GRAVITY, xPos, yPos);
+		mPopWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, xPos, yPos);
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -149,11 +148,11 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 	private void setAnimationStyle(int screenWidth, int requestedX, boolean onTop) {
 		int arrowPos = requestedX - mArrowUp.getMeasuredWidth()/2;
 		if (arrowPos <= screenWidth/4) {
-			window.setAnimationStyle((onTop) ? R.style.Animations_PopUpMenu_Left : R.style.Animations_PopDownMenu_Left);
+			mPopWindow.setAnimationStyle((onTop) ? R.style.Animations_PopUpMenu_Left : R.style.Animations_PopDownMenu_Left);
 		} else if (arrowPos > screenWidth/4 && arrowPos < 3 * (screenWidth/4)) {
-			window.setAnimationStyle((onTop) ? R.style.Animations_PopUpMenu_Center : R.style.Animations_PopDownMenu_Center);
+			mPopWindow.setAnimationStyle((onTop) ? R.style.Animations_PopUpMenu_Center : R.style.Animations_PopDownMenu_Center);
 		} else {
-			window.setAnimationStyle((onTop) ? R.style.Animations_PopUpMenu_Right : R.style.Animations_PopDownMenu_Right);
+			mPopWindow.setAnimationStyle((onTop) ? R.style.Animations_PopUpMenu_Right : R.style.Animations_PopDownMenu_Right);
 		}
 	}
 
@@ -183,6 +182,6 @@ public class QuickAction extends CustomPopupWindow implements OnClickListener {
 			break;
 		}
 		
-		window.dismiss();
+		mPopWindow.dismiss();
 	}
 }

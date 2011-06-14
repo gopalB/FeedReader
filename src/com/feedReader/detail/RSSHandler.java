@@ -28,9 +28,12 @@ import com.feedReader.util.ToastUtilities;
  * Will handle the querying of URL and parsing of the
  * RSS feed. Will update the database and cursor to 
  * reflect back to the user.
+ * Params : String type args[0] = urlString args[1] = encodingType 
+ * Result : 0 - if Success else Error
  * @author Gopal Biyani
  *
  */
+
 public class RSSHandler extends AsyncTask<String, Void,Integer>{
 	private final Cursor mCursor;
 	private final ImageView mRefresh;
@@ -64,29 +67,25 @@ public class RSSHandler extends AsyncTask<String, Void,Integer>{
 		mRefresh.setImageResource(R.drawable.refresh_spinner);
 		mRefresh.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.refresh_rotate));
 	}
-
+	
 	@Override
 	protected Integer doInBackground(String... args) {
 		try{
 			final HttpClient httpClient = mHttpService.getHttpClient();
 			final HttpGet request = new HttpGet(args[0]);
 			final HttpResponse response = httpClient.execute(request);
-
+			//parse
 			parse(response.getEntity().getContent(),args[1]);
 		} catch (ClientProtocolException e) {
-			Log.e(Constants.FEED_READER_LOG,"RSSHandler : " + e.getMessage());
 			e.printStackTrace();
 			return R.string.feed_internet_error;//exception
 		} catch (IOException e) {
-			Log.e(Constants.FEED_READER_LOG,"RSSHandler : " + e.getMessage());
 			e.printStackTrace();
 			return R.string.feed_internet_error;//exception
 		} catch (IllegalStateException e) {
-			Log.e(Constants.FEED_READER_LOG,"RSSHandler : " + e.getMessage());
 			e.printStackTrace();
 			return R.string.feed_xml_error;//exception
 		} catch (XmlPullParserException e) {
-			Log.e(Constants.FEED_READER_LOG,"RSSHandler : " + e.getMessage());
 			e.printStackTrace();
 			return R.string.feed_xml_error;//exception
 		}
@@ -101,6 +100,7 @@ public class RSSHandler extends AsyncTask<String, Void,Integer>{
 		mRefresh.clearAnimation();
 		mRefresh.setImageResource(R.drawable.refresh);
 		if(result != 0){ //Error
+			Log.e(Constants.FEED_READER_LOG,"RSSHandler : " + mContext.getString(result));
 			ToastUtilities.showToast(mContext, result, true);
 		}
 	}
@@ -138,27 +138,31 @@ public class RSSHandler extends AsyncTask<String, Void,Integer>{
 				break;
 			case XmlPullParser.START_TAG:
 				name = parser.getName();
+				//item tag encountered
 				if (name.equalsIgnoreCase(ITEM)){
+					//create new bean item tag encountered
 					feedBean = new FeedBean();
 				} else if (feedBean != null){
+					//parse link tag
 					if (name.equalsIgnoreCase(LINK)){
 						feedBean.setLink(parser.nextText());
-					} else if(name.equalsIgnoreCase(GUID)){
+					} else if(name.equalsIgnoreCase(GUID)){//parse guid tag
 						feedBean.setGUID(parser.nextText());
-					} else if (name.equalsIgnoreCase(PUB_DATE)){
+					} else if (name.equalsIgnoreCase(PUB_DATE)){//parse pubDate
 						feedBean.setPubDate(parser.nextText());
-					} else if (name.equalsIgnoreCase(TITLE)){
+					} else if (name.equalsIgnoreCase(TITLE)){//parse title tag
 						feedBean.setTitle(parser.nextText());
-					} else if(name.equalsIgnoreCase(DESCRIPTION)){
+					} else if(name.equalsIgnoreCase(DESCRIPTION)){//parse description tag
 						feedBean.setDescription(parser.nextText());
 					}
 				}
 				break;
 			case XmlPullParser.END_TAG:
 				name = parser.getName();
+				//end of item tag
 				if (name.equalsIgnoreCase(ITEM) && feedBean != null){
-					feedDetailDB.createFeed(feedRowId, feedBean);
-					publishProgress();
+					feedDetailDB.createFeed(feedRowId, feedBean);//Insert feed into feedDetail table
+					publishProgress();//publish new feed to ui
 				}	
 				break;
 			}

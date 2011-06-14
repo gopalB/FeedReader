@@ -49,9 +49,9 @@ public class FeedDB extends Application{
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(CREATE_FEED_SOURCE_TABLE);//create feedList table
+			db.execSQL(CREATE_FEED_SOURCE_TABLE);//create feedSource table
 			db.execSQL(CREATE_FEED_DETAIL_TABLE);//create feedDetail table
-			db.execSQL(INSERT_STARRED);//create default row for starred
+			db.execSQL(INSERT_STARRED);//create default row for starred in feedSource table
 		}
 
 		@Override

@@ -30,7 +30,7 @@ public class FeedDetailProvider {
     //will query if last update was 30 minutes before
     private static final int LAST_UPDATE = 30;
     //pre compiled statement
-    private SQLiteStatement mCreateFeedDetailStatement;
+    private final SQLiteStatement mCreateFeedDetailStatement;
     
     public FeedDetailProvider(SQLiteDatabase db){
     	mDB = db;
@@ -54,7 +54,7 @@ public class FeedDetailProvider {
     /**
      * Create a new feed using the feed sourced Id and feed bean. If the feed is
      * successfully created return the new rowId for that feed, otherwise return
-     * a -1 to indicate failure.
+     * a -1 to indicate failure or 0 feed already exists
      * @param feed_id feed source id
      * @param feedBean
      * @return new row id else - to indicate failure
@@ -118,29 +118,34 @@ public class FeedDetailProvider {
     }
     
     /**
-     * mark feed as read
-     * @param rowId id to make feed as read/unread
-     * @param isRead read/unread
+     * mark feed as starred
+     * @param rowId id to make feed as starred/not starred
+     * @param isStarred starred/not starred
      * @return boolean query executed successfully
      */
     public boolean markAsStarred(int rowId, boolean isStarred) {
-        ContentValues args = new ContentValues();
+        final ContentValues args = new ContentValues();
         args.put(STARRED, isStarred ? 1 : 0); // 0 - Not Starred 1 - Starred
         return mDB.update(Tables.FEED_DETAIL, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     
     /**
-     * mark feed as starred
+     * mark feed as read
      * @param rowId id to make feed as read/unread
      * @param isRead read/unread
      * @return boolean query executed successfully
      */
     public boolean markAsRead(int rowId, boolean isRead) {
-        ContentValues args = new ContentValues();
+        final ContentValues args = new ContentValues();
         args.put(READ, isRead ? 1 : 0);//0 - Not Read 1 - Read
         return mDB.update(Tables.FEED_DETAIL, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     
+    /**
+     * Will return the url of feedDetail 
+     * @param key_RowID
+     * @return
+     */
     public String getURL(int key_RowID){
     	final Cursor cursor = mDB.query(Tables.FEED_DETAIL,new String[]{KEY_ROWID,LINK}, KEY_ROWID + " = " + key_RowID ,null, null, null, null);
     	cursor.moveToFirst();

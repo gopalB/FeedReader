@@ -86,8 +86,9 @@ public class FeedActivity extends Activity implements OnItemClickListener{
 			mainFeedList.setOnItemClickListener(FeedActivity.this);
 		}
 		/**
-		 * 
-		 * @return
+		 * Get instance of writable database and will populate the feedSource
+		 * table if not populated. 
+		 * @return Cursor over feedSource table
 		 */
 		private Cursor initializeFeedSource(){
 			final SQLiteDatabase db = ((FeedDB)getApplicationContext()).getDatabseHelper().getWritableDatabase();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.style.BackgroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,10 +18,9 @@ import com.feedReader.R;
 
 public class CustomPopupWindow {
 	protected final Context mContext;
-	protected final PopupWindow window;
-	private View root;
-	private Drawable background = null;
-	protected final WindowManager windowManager;
+	protected final PopupWindow mPopWindow;
+	private View mRootView;
+	protected final WindowManager mWindowManager;
 	
 	/**
 	 * Create a QuickAction
@@ -29,24 +29,30 @@ public class CustomPopupWindow {
 	 *            the view that the QuickAction will be displaying 'from'
 	 */
 	public CustomPopupWindow(Context context) {
-		this.window = new PopupWindow(context);
 		mContext = context;
-		// when a touch even happens outside of the window
-		// make the window go away
-		window.setTouchInterceptor(new OnTouchListener() {
+
+		final PopupWindow popWindow = new PopupWindow(context);
+		popWindow.setBackgroundDrawable(new BitmapDrawable());
+		popWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+		popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+		popWindow.setTouchable(true);
+		popWindow.setFocusable(true);
+		popWindow.setOutsideTouchable(true);
+		// when a touch even happens outside of the mPopWindow
+		// make the mPopWindow go away
+		popWindow.setTouchInterceptor(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-					CustomPopupWindow.this.window.dismiss();
+					mPopWindow.dismiss();
 					return true;
 				}
-				
 				return false;
 			}
 		});
 
-		windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		
+		mPopWindow = popWindow;
+		mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		onCreate();
 	}
 
@@ -57,37 +63,20 @@ public class CustomPopupWindow {
 	protected void onCreate() {};
 
 	protected void preShow() {
-		if (root == null) {
+		if (mRootView == null) {
 			throw new IllegalStateException("setContentView was not called with a view to display.");
 		}
-
-		if (background == null) {
-			window.setBackgroundDrawable(new BitmapDrawable());
-		} else {
-			window.setBackgroundDrawable(background);
-		}
-
-		// if using PopupWindow#setBackgroundDrawable this is the only values of the width and hight that make it work
-		// otherwise you need to set the background of the root viewgroup
-		// and set the popupwindow background to an empty BitmapDrawable
-		window.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-		window.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-		window.setTouchable(true);
-		window.setFocusable(true);
-		window.setOutsideTouchable(true);
-
-		window.setContentView(root);
 	}
 
 
 	/**
 	 * Sets the content view. Probably should be called from {@link onCreate}
 	 * 
-	 * @param root
+	 * @param mRootView
 	 *            the view the popup will display
 	 */
 	public void setContentView(View root) {
-		this.root = root;
-		window.setContentView(root);
+		this.mRootView = root;
+		mPopWindow.setContentView(root);
 	}
 }
