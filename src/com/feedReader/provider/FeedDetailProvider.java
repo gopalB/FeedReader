@@ -27,6 +27,7 @@ public class FeedDetailProvider {
 
 	private final SQLiteDatabase mDB;
     private final String[] mFeedDetailCols;
+    private final String[] mOnlyKeyRowIdCol;
     //will query if last update was 30 minutes before
     private static final int LAST_UPDATE = 30;
     //pre compiled statement
@@ -34,7 +35,7 @@ public class FeedDetailProvider {
     
     public FeedDetailProvider(SQLiteDatabase db){
     	mDB = db;
-    	
+    	//insert statement to insert feed into feedDetail table
     	mCreateFeedDetailStatement = db.compileStatement(
     			"INSERT INTO " + Tables.FEED_DETAIL+ "("
                 + FEED_ID + ","
@@ -46,9 +47,10 @@ public class FeedDetailProvider {
                 + STARRED + ","
                 + DESCRIPTION + ")"
                 + " VALUES (?,?,?,?,0,?,0,?);");//Read and Starred - 0
-    	
+    	//columns need to be fetched
     	mFeedDetailCols = new String[] {KEY_ROWID, TITLE,
                 PUB_DATE,LINK,READ,STARRED};
+    	mOnlyKeyRowIdCol = new String[]{KEY_ROWID};
     }
     
     /**
@@ -59,11 +61,11 @@ public class FeedDetailProvider {
      * @param feedBean
      * @return new row id else - to indicate failure
      */
-    public long createFeed(int feed_id,FeedBean feedBean) {
+    public long insertFeed(int feed_id,FeedBean feedBean) {
     	Cursor cursor = null;	
     	try{
     		//Check if feed already exists
-    		cursor = mDB.query(Tables.FEED_DETAIL, new String[]{KEY_ROWID,GUID}, GUID + " like '" + feedBean.getGUID() +"'", null, null, null, null);
+    		cursor = mDB.query(Tables.FEED_DETAIL, mOnlyKeyRowIdCol, GUID + " like '" + feedBean.getGUID() +"'", null, null, null, null);
         	if (cursor != null && cursor.getCount() > 0){
         		return 0;//feed already exists
         	}
@@ -72,13 +74,13 @@ public class FeedDetailProvider {
     			cursor.close();
     	}
     	//adding new feeds
-        mCreateFeedDetailStatement.bindLong(1, feed_id);
-        mCreateFeedDetailStatement.bindString(2, feedBean.getTitle());
-        mCreateFeedDetailStatement.bindString(3, feedBean.getLink());
-        mCreateFeedDetailStatement.bindLong(4, feedBean.getPubDate());
-        mCreateFeedDetailStatement.bindString(5, feedBean.getGUID());
-        mCreateFeedDetailStatement.bindString(6, feedBean.getDescription());
-        return mCreateFeedDetailStatement.executeInsert();
+        mCreateFeedDetailStatement.bindLong(1, feed_id);//feed source id
+        mCreateFeedDetailStatement.bindString(2, feedBean.getTitle());//feed title
+        mCreateFeedDetailStatement.bindString(3, feedBean.getLink());//feed url
+        mCreateFeedDetailStatement.bindLong(4, feedBean.getPubDate());//feed pub date
+        mCreateFeedDetailStatement.bindString(5, feedBean.getGUID());//guid
+        mCreateFeedDetailStatement.bindString(6, feedBean.getDescription());//description
+        return mCreateFeedDetailStatement.executeInsert();//insert into feedDetail table
     }
     /**
      * Retrieve feeds for corresponding feed source id
@@ -107,11 +109,9 @@ public class FeedDetailProvider {
      */
     public int getCount(int feedID) {
     	int count = 0;
-        final Cursor cursor = mDB.query(Tables.FEED_DETAIL, new String[]{KEY_ROWID} , FEED_ID + "=" + feedID, null, null, null, null);
-        if(cursor != null){
-        	count = cursor.getCount();
-        	cursor.close();
-        }	
+        final Cursor cursor = mDB.query(Tables.FEED_DETAIL, mOnlyKeyRowIdCol , FEED_ID + "=" + feedID, null, null, null, null);
+        count = cursor.getCount();
+        cursor.close();
         return count;
         
         
@@ -148,8 +148,9 @@ public class FeedDetailProvider {
      */
     public String getURL(int key_RowID){
     	final Cursor cursor = mDB.query(Tables.FEED_DETAIL,new String[]{KEY_ROWID,LINK}, KEY_ROWID + " = " + key_RowID ,null, null, null, null);
-    	cursor.moveToFirst();
     	String url = "";
+    	cursor.moveToFirst();
+    	//check url is not null
     	if(cursor.getCount() > 0 && !cursor.isNull(1)){
     		url = cursor.getString(1);
     	}
@@ -164,13 +165,14 @@ public class FeedDetailProvider {
      */
     public String getDescription(int key_RowId){
     	final Cursor cursor = mDB.query(Tables.FEED_DETAIL,new String[]{KEY_ROWID,DESCRIPTION}, KEY_ROWID + " = " + key_RowId ,null, null, null, null);
+    	String description = "";
     	cursor.moveToFirst();
-    	String url = "";
+    	//check description is not null
     	if(cursor.getCount() > 0 && !cursor.isNull(1)){
-    		url = cursor.getString(1);
+    		description = cursor.getString(1);
     	}
     	cursor.close();
-    	return url;
+    	return description;
     }
     
     /**
@@ -184,9 +186,9 @@ public class FeedDetailProvider {
     	args.put(FeedSourceProvider.KEY_ROWID, rowId);
     	final Cursor cursor = mDB.query(Tables.FEED_SOURCE,new String[]{KEY_ROWID,FeedSourceProvider.LAST_UPDATED},FeedSourceProvider.KEY_ROWID + "=" + rowId,
     			null,null,null,null);
-    	cursor.moveToFirst();
-    	
     	boolean value;
+    	cursor.moveToFirst();
+    	//check Last_Updated column value is not null
     	if(cursor.getCount() > 0 && !cursor.isNull(1)) {
     		//fetch last update time and compare it with LAST_UPDATE threshold
     		//value
@@ -204,7 +206,7 @@ public class FeedDetailProvider {
      * @return boolen updated successfully or not
      */
     public boolean updateFetchTime(int rowId){
-    	ContentValues args = new ContentValues();
+    	final ContentValues args = new ContentValues();
     	args.put(FeedSourceProvider.LAST_UPDATED, System.currentTimeMillis());
     	Log.d(Constants.FEED_READER_LOG
     			,"Updating Fetch Time : " + System.currentTimeMillis() + " " + rowId + "");

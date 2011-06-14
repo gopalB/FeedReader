@@ -110,7 +110,7 @@ public class RSSHandler extends AsyncTask<String, Void,Integer>{
 	@Override
 	protected void onProgressUpdate(Void... values) {
 		super.onProgressUpdate(values);
-		mCursor.requery();//update back
+		mCursor.requery();//update back to listview
 	}
 	
 	/**
@@ -124,11 +124,11 @@ public class RSSHandler extends AsyncTask<String, Void,Integer>{
 		final FeedDetailProvider feedDetailDB = mFeedDetailDB;
 		final int feedRowId = mFeedRowID;
 		FeedBean feedBean = null;
-
+		//used XML Pull Parser to parse xml
 		XmlPullParser parser = Xml.newPullParser();
 		parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		parser.setInput(new InputStreamReader(inputStream, encoding));
-
+  
 		int eventType = parser.getEventType();
 		boolean done = false;
 		while (eventType != XmlPullParser.END_DOCUMENT && !done){
@@ -161,7 +161,7 @@ public class RSSHandler extends AsyncTask<String, Void,Integer>{
 				name = parser.getName();
 				//end of item tag
 				if (name.equalsIgnoreCase(ITEM) && feedBean != null){
-					feedDetailDB.createFeed(feedRowId, feedBean);//Insert feed into feedDetail table
+					feedDetailDB.insertFeed(feedRowId, feedBean);//Insert feed into feedDetail table
 					publishProgress();//publish new feed to ui
 				}	
 				break;
