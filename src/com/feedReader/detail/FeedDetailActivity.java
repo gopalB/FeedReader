@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,6 +62,7 @@ public class FeedDetailActivity extends Activity implements OnItemClickListener,
 	}
 
 	private void init(){
+//		Debug.startMethodTracing("Gopal");
 		final Bundle bundle = this.getIntent().getExtras();
 		setContentView(R.layout.feed_detail_main);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.feed_detail_custom_title);
@@ -115,7 +117,12 @@ public class FeedDetailActivity extends Activity implements OnItemClickListener,
 			editor.putInt(POSITION, mCursor.getPosition());
 			editor.commit();
 		}
+		
+//		if(isFinishing())
+//			Debug.stopMethodTracing();
 	}
+	
+	
 
 	@Override
 	public void onItemClick(AdapterView<?> listView, View view, int position, long arg3) {

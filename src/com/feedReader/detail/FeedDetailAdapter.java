@@ -1,25 +1,20 @@
 package com.feedReader.detail;
 
-import java.sql.Date;
+import java.util.Date;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.DisplayMetrics;
+import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.feedReader.R;
 import com.feedReader.provider.FeedDetailProvider;
@@ -42,6 +37,14 @@ public class FeedDetailAdapter extends CursorAdapter implements OnClickListener{
 
 	private final Context mContext;
 	private final FeedDetailProvider mFeedDetailDB;
+	
+	private final Date mDate;
+	private final java.text.DateFormat mDateFormat;
+	
+	private long mPubDate;
+	private boolean isRead;
+	private boolean isStarred;
+	private int mKeyRowId;
 
 	public FeedDetailAdapter(Context context, Cursor cursor,FeedDetailProvider feedDetailDB) {
 		super(context, cursor);
@@ -54,19 +57,22 @@ public class FeedDetailAdapter extends CursorAdapter implements OnClickListener{
 		PUB_DATE_INDEX = cursor.getColumnIndex(FeedDetailProvider.PUB_DATE);
 		KEY_ROWID_INDEX = cursor.getColumnIndex(FeedDetailProvider.KEY_ROWID);
 		STARRED_INDEX = cursor.getColumnIndex(FeedDetailProvider.STARRED);
+		
+		mDate = new Date();
+		mDateFormat = DateFormat.getDateFormat(context);
 	}
 
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		final String title = cursor.getString(TITLE_INDEX);
-		final long pub_date = cursor.getLong(PUB_DATE_INDEX);
-		final boolean isRead = cursor.getInt(READ_INDEX) == 0 ? false : true;
-		final int key_RowId = cursor.getInt(KEY_ROWID_INDEX);
+		mPubDate = cursor.getLong(PUB_DATE_INDEX);
+		isRead = cursor.getInt(READ_INDEX) == 0 ? false : true;
+		mKeyRowId = cursor.getInt(KEY_ROWID_INDEX);
 		//0 - Not Starred 1 - Starred
 		final boolean isStarred = cursor.getInt(STARRED_INDEX) == 0 ? false : true;
 
-		view.setTag(key_RowId);
+		view.setTag(mKeyRowId);
 		
 		final TextView feedTitle = (TextView) view.findViewById(R.feed_detail_list_item.title);
 		if (feedTitle != null) {
@@ -77,12 +83,13 @@ public class FeedDetailAdapter extends CursorAdapter implements OnClickListener{
 		if (feedLink != null) {
 			//set feed detail id to fetch details when user clicks
 			//to read more
-			feedLink.setTag(Integer.valueOf(key_RowId));
+			feedLink.setTag(Integer.valueOf(mKeyRowId));
 		}
 
 		final TextView feedPubDate = (TextView) view.findViewById(R.feed_detail_list_item.pubDate);
 		if (feedPubDate != null) {
-			feedPubDate.setText(new Date(pub_date).toString());
+			mDate.setTime(mPubDate);
+			feedPubDate.setText(mDateFormat.format(mDate));
 		}
 
 		final ImageView isReadView = (ImageView) view.findViewById(R.feed_detail_list_item.is_read);
@@ -93,7 +100,7 @@ public class FeedDetailAdapter extends CursorAdapter implements OnClickListener{
 
 		final ImageView isStarredView = (ImageView) view.findViewById(R.feed_detail_list_item.starred);
 		//set feed detail id to tag starred feed
-		isStarredView.setTag(Integer.valueOf(key_RowId));
+		isStarredView.setTag(Integer.valueOf(mKeyRowId));
 		//tagged by user
 		isStarredView.setTag(R.feed_detail_list_item.starred, Boolean.valueOf(isStarred));//onClick
 		if(isStarred)

@@ -111,7 +111,7 @@ public class FeedActivity extends Activity implements OnItemClickListener{
 			return cursor;
 		}
 	}
-
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
