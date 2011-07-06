@@ -123,8 +123,8 @@ public class FeedDetailProvider {
      * @param isStarred starred/not starred
      * @return boolean query executed successfully
      */
-    public boolean markAsStarred(int rowId, boolean isStarred) {
         final ContentValues args = new ContentValues();
+        public boolean markAsStarred(int rowId, boolean isStarred) {
         args.put(STARRED, isStarred ? 1 : 0); // 0 - Not Starred 1 - Starred
         return mDB.update(Tables.FEED_DETAIL, args, KEY_ROWID + "=" + rowId, null) > 0;
     }

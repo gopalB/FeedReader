@@ -22,7 +22,7 @@ public class FacebookProvider {
 	private final Activity mActivity;
 	private final Facebook mFacebook;
 	private static final String APP_ID = "220639124615871";
-	public static final String FACEBOOK_LOG = "facebook";
+	public static final String FACEBOOK_LOG = Constants.FEED_READER_LOG;
 	private Bundle mPostBundle;
 	
 	public FacebookProvider(Activity activity){
@@ -48,6 +48,7 @@ public class FacebookProvider {
 	}
 	
 	public void onActivityResult(int resultCode,int requestCode,Intent data){
+		Log.d(Constants.FEED_READER_LOG, "Authorize Callback, On Activity Result - FacebookProvider Class");
 		mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 	

@@ -12,12 +12,14 @@ import android.util.Log;
  * Will Instantiate DatabaseHelper object and will be shared
  * across the application. 
  * @author Gopal Biyani
+ * 
+ * Databse Version 3 : Created Index on feedDetail table on column _id and feed_id
  *
  */
 public class FeedDB extends Application{
 
 	private static final String DATABASE_NAME = "feedDB";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 	
 
 	private DatabaseHelper mFeedDBHelper;
@@ -35,7 +37,11 @@ public class FeedDB extends Application{
 	//Insert Starred row into feedList table Default Key 1
 	private static final String INSERT_STARRED = 
 			"insert into feedList values ("+ FeedSourceProvider.STARRED_ID +",'Starred','','',0)"; //Starred Default Key 1
-	
+	//create index on feed_detail table
+	private static final String CREATE_INDEX_FEED_DETAIL_ID = "create" +
+			" INDEX feed_detail_id_idx ON " + Tables.FEED_DETAIL + "(_id)" ;
+	private static final String CREATE_INDEX_FEED_DETAIL_FEED_ID = "create" +
+			" INDEX feed_detail_feed_id_idx ON " + Tables.FEED_DETAIL + "(feed_id)" ;
 	@Override
 	public void onCreate() {
 		super.onCreate();  
@@ -56,7 +62,8 @@ public class FeedDB extends Application{
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			//Handle carefully, should not affect saved user data
+			db.execSQL(CREATE_INDEX_FEED_DETAIL_ID);
+			db.execSQL(CREATE_INDEX_FEED_DETAIL_FEED_ID);
 		}
 	}
 

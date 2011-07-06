@@ -201,13 +201,13 @@ public class FeedDetailActivity extends Activity implements OnItemClickListener,
 		if(mFeedAdapter != null)
 			mFeedAdapter.changeCursor(mCursor);//replace with new cursor
 		
-		Log.d(Constants.FEED_READER_LOG,"Update List");
-		if(mCursor.getCount() == mFeedDetailDB.getCount(mFeed_RowId)){
-			//No more feeds hide load more
-			mLoadMore.setVisibility(View.GONE);
-		} else {
-			mLoadMore.setVisibility(View.VISIBLE);
-		}
+//		Log.d(Constants.FEED_READER_LOG,"Update List");
+//		if(mCursor.getCount() == mFeedDetailDB.getCount(mFeed_RowId)){
+//			//No more feeds hide load more
+//			mLoadMore.setVisibility(View.GONE);
+//		} else {
+//			mLoadMore.setVisibility(View.VISIBLE);
+//		}
 		
 	}
 

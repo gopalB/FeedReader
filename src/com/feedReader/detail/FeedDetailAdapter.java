@@ -67,38 +67,39 @@ public class FeedDetailAdapter extends CursorAdapter implements OnClickListener{
 	public void bindView(View view, Context context, Cursor cursor) {
 		final String title = cursor.getString(TITLE_INDEX);
 		mPubDate = cursor.getLong(PUB_DATE_INDEX);
-		isRead = cursor.getInt(READ_INDEX) == 0 ? false : true;
 		mKeyRowId = cursor.getInt(KEY_ROWID_INDEX);
 		//0 - Not Starred 1 - Starred
-		final boolean isStarred = cursor.getInt(STARRED_INDEX) == 0 ? false : true;
+		isStarred = cursor.getInt(STARRED_INDEX) == 0 ? false : true;
+		//0 - Not Read 1 - Read
+		isRead = cursor.getInt(READ_INDEX) == 0 ? false : true;
 
-		view.setTag(mKeyRowId);
+		ViewHolder holder = (ViewHolder)view.getTag();
 		
-		final TextView feedTitle = (TextView) view.findViewById(R.feed_detail_list_item.title);
+		final TextView feedTitle = holder.mFeedTitle;
 		if (feedTitle != null) {
 			feedTitle.setText(title);
 		}
 
-		final TextView feedLink = (TextView) view.findViewById(R.feed_detail_list_item.readMore);
+		final TextView feedLink = holder.mFeedLink;
 		if (feedLink != null) {
 			//set feed detail id to fetch details when user clicks
 			//to read more
 			feedLink.setTag(Integer.valueOf(mKeyRowId));
 		}
 
-		final TextView feedPubDate = (TextView) view.findViewById(R.feed_detail_list_item.pubDate);
+		final TextView feedPubDate = holder.mFeedPubDate;
 		if (feedPubDate != null) {
 			mDate.setTime(mPubDate);
 			feedPubDate.setText(mDateFormat.format(mDate));
 		}
 
-		final ImageView isReadView = (ImageView) view.findViewById(R.feed_detail_list_item.is_read);
+		final ImageView isReadView = holder.mReadView;
 		if(isRead)
 			isReadView.setVisibility(View.INVISIBLE);
 		else
 			isReadView.setVisibility(View.VISIBLE);
 
-		final ImageView isStarredView = (ImageView) view.findViewById(R.feed_detail_list_item.starred);
+		final ImageView isStarredView = holder.mStarredView;
 		//set feed detail id to tag starred feed
 		isStarredView.setTag(Integer.valueOf(mKeyRowId));
 		//tagged by user
@@ -112,11 +113,36 @@ public class FeedDetailAdapter extends CursorAdapter implements OnClickListener{
 	@Override
 	public View newView(Context context, final Cursor cursor, ViewGroup parent) {
 		final View view = mLayoutInflater.inflate(R.layout.feed_detail_list_item,parent,false);
+		
+		final ViewHolder holder = new ViewHolder();
+		//feedLink
 		final TextView feedLink = (TextView) view.findViewById(R.feed_detail_list_item.readMore);
 		feedLink.setOnClickListener(this);
+		holder.mFeedLink = feedLink;
+		//starred view
 		final ImageView isStarredView = (ImageView) view.findViewById(R.feed_detail_list_item.starred);
 		isStarredView.setOnClickListener(this);
+		holder.mStarredView = isStarredView;
+		//feed title
+		final TextView feedTitle = (TextView) view.findViewById(R.feed_detail_list_item.title);
+		holder.mFeedTitle = feedTitle;
+		//read view
+		final ImageView isReadView = (ImageView) view.findViewById(R.feed_detail_list_item.is_read);
+		holder.mReadView = isReadView;
+		//feed pub date
+		final TextView feedPubDate = (TextView) view.findViewById(R.feed_detail_list_item.pubDate);
+		holder.mFeedPubDate = feedPubDate;
+		//settag as holder object
+		view.setTag(holder);
 		return view;
+	}
+	
+	public static class ViewHolder{
+		TextView mFeedLink;
+		TextView mFeedTitle;
+		TextView mFeedPubDate;
+		ImageView mStarredView;
+		ImageView mReadView;
 	}
 
 	@Override
@@ -140,9 +166,16 @@ public class FeedDetailAdapter extends CursorAdapter implements OnClickListener{
 			mContext.startActivity(browserIntent);
 			break;
 		case R.feed_detail_list_item.starred:
-			boolean isStarred = (Boolean)v.getTag(R.feed_detail_list_item.starred);
+			boolean isStarred = !((Boolean)v.getTag(R.feed_detail_list_item.starred));
+			final ImageView isStarredView = (ImageView)v;
+			
+			if(isStarred)
+				isStarredView.setImageResource(R.drawable.starred_on);
+			else
+				isStarredView.setImageResource(R.drawable.starred_off);
+			isStarredView.invalidate();
 			//mark feed as starred if it wasnt starred or view versa 
-			feedDetailDB.markAsStarred(key_RowId, !isStarred);
+			feedDetailDB.markAsStarred(key_RowId, isStarred);
 			getCursor().requery();
 			break;
 		}
